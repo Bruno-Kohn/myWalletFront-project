@@ -1,9 +1,18 @@
-import ReactDOM from 'react-dom';
+import ReactDOM from "react-dom";
+import { BrowserRouter, Switch, Route } from "react-router-dom";
+import "./styles/reset.css";
+import Login from "./Login.js";
 
 function App() {
-    return (
-        <h1>Hello, World</h1>
-    );
+  return (
+    <BrowserRouter>
+      <Switch>
+        <Route path="/" exact>
+          <Login />
+        </Route>
+      </Switch>
+    </BrowserRouter>
+  );
 }
 
 const app = App();
