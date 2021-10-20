@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 
@@ -24,6 +24,7 @@ export default function Login() {
 
     req.then((resp) => {
       //entrar no app
+      //history.push("/records");
     });
 
     req.catch((error) => {
