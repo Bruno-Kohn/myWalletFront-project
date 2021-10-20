@@ -1,13 +1,37 @@
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import { useState } from "react";
+import axios from "axios";
 
 export default function Register() {
-  //const [email, setEmail] = useState("");
-  //const [password, setPassword] = useState("");
+  const history = useHistory();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordConfirmation, setPasswordConfirmation] = useState("");
+  const [clicked, setClicked] = useState(false);
 
   function toRegister(event) {
     event.preventDefault();
-    console.log("register");
+    setClicked(true);
+    const body = { name, email, password, passwordConfirmation };
+
+    if (passwordConfirmation !== password) {
+      alert("Passwords do not match, please retype");
+    } else {
+      const req = axios.post(`GERAR A ROTA DO BACKEND AQUI`, body);
+      req.then((resp) => {
+        history.push("/");
+      });
+      req.catch((error) => {
+        setName("");
+        setEmail("");
+        setPassword("");
+        setPasswordConfirmation("");
+        setClicked(false);
+        alert("Oh no! Something went wrong. Please try again");
+      });
+    }
   }
 
   return (
@@ -18,31 +42,36 @@ export default function Register() {
           <form onSubmit={toRegister}>
             <Name
               type="text"
-              //value={name}
-              //onChange={(e) => setName(e.target.value)}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               placeholder="Name"
+              disabled={clicked}
             />
             <Email
               type="email"
-              //value={email}
-              //onChange={(e) => setEmail(e.target.value)}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="E-mail"
+              disabled={clicked}
             />
             <Password
               type="password"
-              //value={email}
-              //onChange={(e) => setEmail(e.target.value)}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
+              disabled={clicked}
             />
             <PasswordConfirmation
               type="password"
-              //value={senha}
-              //onChange={(e) => setSenha(e.target.value)}
+              value={passwordConfirmation}
+              onChange={(e) => setPasswordConfirmation(e.target.value)}
               placeholder="Confirm Password"
+              disabled={clicked}
             />
+            <RegisterButton>Register</RegisterButton>
           </form>
         </ContainerForm>
-        <RegisterButton>Register</RegisterButton>
+
         <Link to="/">
           <EnterNow>Already have an account? Enter now!</EnterNow>
         </Link>
@@ -160,7 +189,6 @@ const RegisterButton = styled.button`
   font-weight: bold;
   font-size: 20px;
   font-family: Raleway;
-  margin-left: calc((100vw / 2) - 326px / 2);
   margin-bottom: 30px;
 `;
 
