@@ -1,12 +1,39 @@
 import styled from "styled-components";
+import { Link } from "react-router-dom";
+import { useState } from "react";
+import axios from "axios";
 
 export default function Login() {
-  //const [email, setEmail] = useState("");
-  //const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [clicked, setClicked] = useState(false);
 
   function toLogin(event) {
     event.preventDefault();
+    setClicked(true);
     console.log("login");
+    //mandar a requisicao para o back
+    //caso retorno sucesso entrar no app
+    //caso venha com falha, habilitar e apagar os campos 
+    const body = {
+      email,
+      password
+    };
+
+    const req = axios.post(`GERAR A ROTA DO BACKEND AQUI`, body);
+
+    req.then((resp) => {
+      //entrar no app
+    });
+
+    req.catch((error) => {
+      console.log(error); //apagar depois
+      setEmail("");
+      setPassword("");
+      setClicked("");
+      alert("Oh no! Something went wrong. Please try again");
+    })
+
   }
 
   return (
@@ -17,20 +44,25 @@ export default function Login() {
           <form onSubmit={toLogin}>
             <Email
               type="email"
-              //value={email}
-              //onChange={(e) => setEmail(e.target.value)}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="E-mail"
+              disabled={clicked}
             />
             <Password
               type="password"
-              //value={senha}
-              //onChange={(e) => setSenha(e.target.value)}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
+              disabled={clicked}
             />
+            <LoginButton>Login</LoginButton>
           </form>
         </ContainerForm>
-        <LoginButton>Login</LoginButton>
-        <RegisterNow>Is it your first time here? Register now!</RegisterNow>
+
+        <Link to="/register">
+          <RegisterNow>Is it your first time here? Register now!</RegisterNow>
+        </Link>
       </Holder>
     </Container>
   );
@@ -111,7 +143,6 @@ const LoginButton = styled.button`
   font-weight: bold;
   font-size: 20px;
   font-family: Raleway;
-  margin-left: calc((100vw / 2) - 326px / 2);
   margin-bottom: 30px;
 `;
 

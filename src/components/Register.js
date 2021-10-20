@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 export default function Register() {
   //const [email, setEmail] = useState("");
@@ -42,7 +43,9 @@ export default function Register() {
           </form>
         </ContainerForm>
         <RegisterButton>Register</RegisterButton>
-        <EnterNow>Already have an account? Enter now!</EnterNow>
+        <Link to="/">
+          <EnterNow>Already have an account? Enter now!</EnterNow>
+        </Link>
       </Holder>
     </Container>
   );
