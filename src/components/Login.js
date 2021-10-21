@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom"; //useHistory
 import { useState } from "react";
 import axios from "axios";
 
@@ -20,11 +20,13 @@ export default function Login() {
       password
     };
 
-    const req = axios.post(`GERAR A ROTA DO BACKEND AQUI`, body);
+    const req = axios.post(`http://localhost:4000/`, body);
 
     req.then((resp) => {
+      console.log(resp);
       //entrar no app
       //history.push("/records");
+      console.log(resp.data);
     });
 
     req.catch((error) => {

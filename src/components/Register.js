@@ -19,7 +19,7 @@ export default function Register() {
     if (passwordConfirmation !== password) {
       alert("Passwords do not match, please retype");
     } else {
-      const req = axios.post(`GERAR A ROTA DO BACKEND AQUI`, body);
+      const req = axios.post(`http://localhost:4000/register`, body);
       req.then((resp) => {
         history.push("/");
       });
