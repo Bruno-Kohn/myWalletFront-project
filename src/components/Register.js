@@ -21,9 +21,12 @@ export default function Register() {
     } else {
       const req = axios.post(`http://localhost:4000/register`, body);
       req.then((resp) => {
+        console.log(resp); //apagar depois
         history.push("/");
+        console.log(resp.data); //apagar depois
       });
       req.catch((error) => {
+        console.log(error); //apagar depois
         setName("");
         setEmail("");
         setPassword("");
@@ -68,7 +71,9 @@ export default function Register() {
               placeholder="Confirm Password"
               disabled={clicked}
             />
-            <RegisterButton>Register</RegisterButton>
+            <RegisterButton disabled={clicked} type="submit">
+              Register
+            </RegisterButton>
           </form>
         </ContainerForm>
 

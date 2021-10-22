@@ -1,8 +1,26 @@
 import styled from "styled-components";
 import { IoExitOutline } from "react-icons/io5";
 import { FiMinusCircle, FiPlusCircle } from "react-icons/fi";
+//import { useEffect } from "react";
+//import axios from "axios";
+import UserContext from "../contexts/UserContext.js";
+import { useContext } from "react";
 
 export default function Records() {
+  const { userData } = useContext(UserContext);
+  console.log(userData);
+
+  /*useEffect(() => {
+    console.log(token, "meu tokennn");
+    axios.get(`http://localhost:4000/`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+  }, 
+  // eslint-disable-next-line
+  []);*/
+
   const records = [
     "primeiro",
     "primeiro",
@@ -21,7 +39,7 @@ export default function Records() {
   return (
     <Container>
       <Top>
-        <h1>Hello, Fulano</h1>
+        <h1>Hello, {userData.name}</h1>
         <IoExitOutline color="#FFFFFF" size={40} />
       </Top>
       <RecordsContainer>

@@ -1,12 +1,15 @@
 import styled from "styled-components";
-import { Link } from "react-router-dom"; //useHistory
-import { useState } from "react";
+import { Link, useHistory } from "react-router-dom";
+import { useState, useContext } from "react";
 import axios from "axios";
+import UserContext from "../contexts/UserContext.js";
 
 export default function Login() {
+  const history = useHistory();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [clicked, setClicked] = useState(false);
+  const { setUserData } = useContext(UserContext); // {UserData}
 
   function toLogin(event) {
     event.preventDefault();
@@ -14,18 +17,18 @@ export default function Login() {
     console.log("login");
     //mandar a requisicao para o back
     //caso retorno sucesso entrar no app
-    //caso venha com falha, habilitar e apagar os campos 
+    //caso venha com falha, habilitar e apagar os campos
     const body = {
       email,
-      password
+      password,
     };
 
     const req = axios.post(`http://localhost:4000/`, body);
 
     req.then((resp) => {
       console.log(resp);
-      //entrar no app
-      //history.push("/records");
+      setUserData(resp.data);
+      history.push("/records");
       console.log(resp.data);
     });
 
@@ -33,10 +36,9 @@ export default function Login() {
       console.log(error); //apagar depois
       setEmail("");
       setPassword("");
-      setClicked("");
+      setClicked(false);
       alert("Oh no! Something went wrong. Please try again");
-    })
-
+    });
   }
 
   return (
@@ -59,7 +61,9 @@ export default function Login() {
               placeholder="Password"
               disabled={clicked}
             />
-            <LoginButton>Login</LoginButton>
+            <LoginButton disabled={clicked} type="submit">
+              Login
+            </LoginButton>
           </form>
         </ContainerForm>
 
@@ -71,7 +75,7 @@ export default function Login() {
   );
 }
 
-//----- Styled Components
+//----- Styled Components -----
 
 const Container = styled.div`
   height: 100vh;
