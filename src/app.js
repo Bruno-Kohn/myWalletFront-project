@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import "./styles/reset.css";
 import Login from "./components/Login.js";
@@ -10,6 +10,14 @@ import UserContext from "./contexts/UserContext";
 
 export default function App() {
   const [userData, setUserData] = useState("");
+
+  useEffect(() => {
+    const loginUser = JSON.parse(localStorage.getItem("loginUser"));
+    if (loginUser) {
+      setUserData(loginUser);
+    }
+  }, []);
+
   return (
     <UserContext.Provider value={{ userData, setUserData }}>
       <BrowserRouter>

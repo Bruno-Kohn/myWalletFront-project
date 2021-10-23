@@ -14,10 +14,6 @@ export default function Login() {
   function toLogin(event) {
     event.preventDefault();
     setClicked(true);
-    console.log("login");
-    //mandar a requisicao para o back
-    //caso retorno sucesso entrar no app
-    //caso venha com falha, habilitar e apagar os campos
     const body = {
       email,
       password,
@@ -26,14 +22,12 @@ export default function Login() {
     const req = axios.post(`http://localhost:4000/`, body);
 
     req.then((resp) => {
-      console.log(resp);
       setUserData(resp.data);
+      localStorage.setItem("loginUser", JSON.stringify(resp.data));
       history.push("/records");
-      console.log(resp.data);
     });
 
     req.catch((error) => {
-      console.log(error); //apagar depois
       setEmail("");
       setPassword("");
       setClicked(false);

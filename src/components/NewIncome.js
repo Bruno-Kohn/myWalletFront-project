@@ -1,31 +1,68 @@
 import styled from "styled-components";
+import { TiArrowBackOutline } from "react-icons/ti";
+import { Link, useHistory } from "react-router-dom";
+import UserContext from "../contexts/UserContext.js";
+import { useContext, useState } from "react";
+import axios from "axios";
 
 export default function NewIncome() {
-  function toLogin(event) {
+  const history = useHistory();
+  const { userData } = useContext(UserContext);
+  const [incomeValue, setIncomeValue] = useState("");
+  const [incomeDescription, setIncomeDescription] = useState("");
+  const [clicked, setClicked] = useState(false);
+
+  function toAddNewIncome(event) {
     event.preventDefault();
-    console.log("login");
+    console.log("new income added"); //remove later
+    setClicked(true);
+    const body = {
+      incomeValue,
+      incomeDescription,
+    };
+
+    const req = axios.post(`http://localhost:4000/income`, body, { headers: {
+      Authorization: `Bearer ${userData.token}`
+    }});
+
+    req.then((resp) => {
+      history.push("/records");
+    });
+
+    req.catch((error) => {
+      setIncomeValue("");
+      setIncomeDescription("");
+      setClicked(false);
+      alert("Oh no! Something went wrong. Please try again");
+    });
   }
 
   return (
     <Container>
       <Top>
         <h1>New income</h1>
+        <Link to="/records">
+          <TiArrowBackOutline color="#FFFFFF" size={35} />
+        </Link>
       </Top>
       <Holder>
-        <form onSubmit={toLogin}>
+        <form onSubmit={toAddNewIncome}>
           <IncomeValue
             type="number"
-            //value={email}
-            //onChange={(e) => setEmail(e.target.value)}
+            min="1"
+            value={incomeValue}
+            onChange={(e) => setIncomeValue(e.target.value)}
             placeholder="value"
+            disabled={clicked}
           />
           <IncomeDescription
             type="text"
-            //value={senha}
-            //onChange={(e) => setSenha(e.target.value)}
+            value={incomeDescription}
+            onChange={(e) => setIncomeDescription(e.target.value)}
             placeholder="description"
+            disabled={clicked}
           />
-          <SaveButton>Save income</SaveButton>
+          <SaveButton disabled={clicked} type="submit">Save income</SaveButton>
         </form>
       </Holder>
     </Container>

@@ -1,31 +1,68 @@
 import styled from "styled-components";
+import { TiArrowBackOutline } from "react-icons/ti";
+import { Link, useHistory } from "react-router-dom";
+import UserContext from "../contexts/UserContext.js";
+import { useContext, useState } from "react";
+import axios from "axios";
 
 export default function NewExpense() {
-  function toLogin(event) {
+  const history = useHistory();
+  const { userData } = useContext(UserContext);
+  const [expenseValue, setExpenseValue] = useState("");
+  const [expenseDescription, setExpenseDescription] = useState("");
+  const [clicked, setClicked] = useState(false);
+
+  function toAddNewExpense(event) {
     event.preventDefault();
-    console.log("login");
+    console.log("new expense added"); //remove later
+    setClicked(true);
+    const body = {
+      expenseValue,
+      expenseDescription,
+    };
+
+    const req = axios.post(`http://localhost:4000/expense`, body, { headers: {
+      Authorization: `Bearer ${userData.token}`
+    }});
+
+    req.then((resp) => {
+      history.push("/records");
+    });
+
+    req.catch((error) => {
+      setExpenseValue("");
+      setExpenseDescription("");
+      setClicked(false);
+      alert("Oh no! Something went wrong. Please try again");
+    });
   }
 
   return (
     <Container>
       <Top>
         <h1>New expense</h1>
+        <Link to="/records">
+          <TiArrowBackOutline color="#FFFFFF" size={35} />
+        </Link>
       </Top>
       <Holder>
-        <form onSubmit={toLogin}>
-          <ExpenseValeu
+        <form onSubmit={toAddNewExpense}>
+          <ExpenseValue
             type="number"
-            //value={email}
-            //onChange={(e) => setEmail(e.target.value)}
+            min="1"
+            value={expenseValue}
+            onChange={(e) => setExpenseValue(e.target.value)}
             placeholder="value"
+            disabled={clicked}
           />
           <ExpenseDescription
             type="text"
-            //value={senha}
-            //onChange={(e) => setSenha(e.target.value)}
+            value={expenseDescription}
+            onChange={(e) => setExpenseDescription(e.target.value)}
             placeholder="description"
+            disabled={clicked}
           />
-          <SaveButton>Save expense</SaveButton>
+          <SaveButton disabled={clicked} type="submit">Save expense</SaveButton>
         </form>
       </Holder>
     </Container>
@@ -60,7 +97,7 @@ const Holder = styled.div`
   padding-top: 20px;
 `;
 
-const ExpenseValeu = styled.input`
+const ExpenseValue = styled.input`
   width: 360px;
   height: 58px;
   border-radius: 5px;

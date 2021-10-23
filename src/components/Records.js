@@ -1,73 +1,94 @@
 import styled from "styled-components";
 import { IoExitOutline } from "react-icons/io5";
 import { FiMinusCircle, FiPlusCircle } from "react-icons/fi";
-//import { useEffect } from "react";
-//import axios from "axios";
+import axios from "axios";
 import UserContext from "../contexts/UserContext.js";
-import { useContext } from "react";
+import { useContext, useState, useEffect } from "react";
+import { Link, useHistory } from "react-router-dom";
+import dayjs from "dayjs";
 
 export default function Records() {
-  const { userData } = useContext(UserContext);
-  console.log(userData);
+  const { userData, setUserData } = useContext(UserContext);
+  const [recordsList, setRecordsList] = useState([]);
+  const tknLogin = userData.token;
+  const history = useHistory();
 
-  /*useEffect(() => {
-    console.log(token, "meu tokennn");
-    axios.get(`http://localhost:4000/`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    })
-  }, 
-  // eslint-disable-next-line
-  []);*/
+  if(!tknLogin) {
+    history.push("/");
+  }
 
-  const records = [
-    "primeiro",
-    "primeiro",
-    "primeiro",
-    "primeiro",
-    "primeiro",
-    "primeiro",
-    "primeiro",
-    "primeiro",
-    "primeiro",
-    "primeiro",
-    "primeiro",
-    "primeiro",
-  ];
+  useEffect(
+    () => {
+      const header = {
+        headers: {
+          Authorization: `Bearer ${userData.token}`,
+        },
+      };
+      console.log(userData.token, "meu tokennn");
+      axios.get(`http://localhost:4000/`, header);
+      const req = axios.get(`http://localhost:4000/records`, header);
+      req.then((resp) => {
+        console.log(resp, "opa1");
+        console.log(resp.data, "opa2");
+        setRecordsList(resp.data);
+      });
+    },
+    // eslint-disable-next-line
+    []
+  );
+
+  function toExitAccount() {
+    localStorage.removeItem("loginUser");
+    setUserData({});
+    history.push("/");
+  }
 
   return (
     <Container>
       <Top>
         <h1>Hello, {userData.name}</h1>
-        <IoExitOutline color="#FFFFFF" size={40} />
+        <IoExitOutline color="#FFFFFF" size={40} onClick={toExitAccount}/>
       </Top>
+      <BackContainer>
       <RecordsContainer>
-        {records.map((i) => {
-          return (
-            <RecordsDisplay>
-              <Description>
-                <DescriptionDate>19/10</DescriptionDate>
-                <DescriptionInfo>Mercado</DescriptionInfo>
-              </Description>
-              <RecordsValue>542.54</RecordsValue>
-            </RecordsDisplay>
-          );
-        })}
+        {recordsList.length === 0 ? (
+          <h1>You don't have any records yet</h1>
+        ) : (
+          recordsList.map((i) => {
+            return (
+              <RecordsDisplay>
+                <Description>
+                  <DescriptionDate>{dayjs(i.date).format('DD/MM')}</DescriptionDate>
+                  <DescriptionInfo>{i.description}</DescriptionInfo>
+                </Description>
+                <RecordsValue>{`$ ${i.value}.00`}</RecordsValue>
+              </RecordsDisplay>
+            );
+          })
+        )}
       </RecordsContainer>
       <Net>
-        <NetDescription>Net</NetDescription>
-        <NetValue>1,435,345.98</NetValue>
+        <NetDescription>
+          {recordsList.length === 0 ? "" : <h1>Net</h1>}
+        </NetDescription>
+        <NetValue>
+          {recordsList.length === 0 ? "" : <h1>{recordsList.reduce((a,b) => Number(a.value) + Number(b.value))}</h1>}
+        </NetValue>
       </Net>
+      </BackContainer>
       <Bottom>
-        <NewIncome>
-          <FiPlusCircle color="#FFFFFF" size={35} />
-          <h2>New income</h2>
-        </NewIncome>
-        <NewExpense>
-          <FiMinusCircle color="#FFFFFF" size={35} />
-          <h2>New expense</h2>
-        </NewExpense>
+        <Link to="/income">
+          <NewIncome>
+            <FiPlusCircle color="#FFFFFF" size={35} />
+            <h2>New income</h2>
+          </NewIncome>
+        </Link>
+        <Link to="/expense">
+          <NewExpense>
+            <FiMinusCircle color="#FFFFFF" size={35} />
+            <h2>New expense</h2>
+          </NewExpense>
+        </Link>
       </Bottom>
     </Container>
   );
@@ -96,13 +117,26 @@ const Top = styled.div`
   }
 `;
 
+const BackContainer = styled.div`
+background-color: #FFF;
+margin: 0 20px;
+border-radius: 5px;
+`
+
 const RecordsContainer = styled.div`
   height: 400px;
   border-radius: 5px 5px 0 0;
   background-color: #fff;
-  margin: 0 20px;
   padding-top: 10px;
   overflow: scroll;
+
+  h1 {
+    font-family: Raleway;
+    font-size: 20px;
+    text-align: center;
+    color: #868686;
+    margin-top: 200px;
+  }
 `;
 
 const RecordsDisplay = styled.div`
@@ -141,7 +175,7 @@ const RecordsValue = styled.div`
 const Net = styled.div`
   height: auto;
   background-color: #fff;
-  margin: 0 20px 20px 20px;
+  margin: 0 0 20px 0;
   border-radius: 0 0 5px 5px;
   display: flex;
   justify-content: space-between;
