@@ -13,7 +13,7 @@ export default function Records() {
   const tknLogin = userData.token;
   const history = useHistory();
 
-  if(!tknLogin) {
+  if (!tknLogin) {
     history.push("/");
   }
 
@@ -43,38 +43,51 @@ export default function Records() {
     history.push("/");
   }
 
+  function sumNet() {
+    let sumNet = 0;
+    recordsList.forEach((i) => (sumNet = sumNet + Number(i.value)));
+    console.log(sumNet, "wkhdhkwd");
+    return sumNet;
+  }
+
   return (
     <Container>
       <Top>
         <h1>Hello, {userData.name}</h1>
-        <IoExitOutline color="#FFFFFF" size={40} onClick={toExitAccount}/>
+        <IoExitOutline color="#FFFFFF" size={40} onClick={toExitAccount} />
       </Top>
       <BackContainer>
-      <RecordsContainer>
-        {recordsList.length === 0 ? (
-          <h1>You don't have any records yet</h1>
-        ) : (
-          recordsList.map((i) => {
-            return (
-              <RecordsDisplay>
-                <Description>
-                  <DescriptionDate>{dayjs(i.date).format('DD/MM')}</DescriptionDate>
-                  <DescriptionInfo>{i.description}</DescriptionInfo>
-                </Description>
-                <RecordsValue>{`$ ${i.value}.00`}</RecordsValue>
-              </RecordsDisplay>
-            );
-          })
-        )}
-      </RecordsContainer>
-      <Net>
-        <NetDescription>
-          {recordsList.length === 0 ? "" : <h1>Net</h1>}
-        </NetDescription>
-        <NetValue>
-          {recordsList.length === 0 ? "" : <h1>{recordsList.reduce((a,b) => Number(a.value) + Number(b.value))}</h1>}
-        </NetValue>
-      </Net>
+        <RecordsContainer>
+          {recordsList.length === 0 ? (
+            <h1>You don't have any records yet</h1>
+          ) : (
+            recordsList.map((i) => {
+              return (
+                <RecordsDisplay>
+                  <Description>
+                    <DescriptionDate>
+                      {dayjs(i.date).format("DD/MM")}
+                    </DescriptionDate>
+                    <DescriptionInfo>{i.description}</DescriptionInfo>
+                  </Description>
+                  <RecordsValue income={Number(i.value) > 0 ? true : false}>
+                    {i.value.includes(".")
+                      ? "$ " + i.value.replace("-", "")
+                      : `$ ${i.value.replace("-", "")}.00`}
+                  </RecordsValue>
+                </RecordsDisplay>
+              );
+            })
+          )}
+        </RecordsContainer>
+        <Net>
+          <NetDescription>
+            {recordsList.length === 0 ? "" : <h1>Net</h1>}
+          </NetDescription>
+          <NetValue income={Number(sumNet()) > 0 ? true : false}>
+            {recordsList.length === 0 ? "" : "$ " + sumNet().toFixed(2)}
+          </NetValue>
+        </Net>
       </BackContainer>
       <Bottom>
         <Link to="/income">
@@ -118,10 +131,10 @@ const Top = styled.div`
 `;
 
 const BackContainer = styled.div`
-background-color: #FFF;
-margin: 0 20px;
-border-radius: 5px;
-`
+  background-color: #fff;
+  margin: 0 20px;
+  border-radius: 5px;
+`;
 
 const RecordsContainer = styled.div`
   height: 400px;
@@ -169,7 +182,7 @@ const DescriptionInfo = styled.div`
 const RecordsValue = styled.div`
   font-family: Raleway;
   font-size: 20px;
-  color: #c70000;
+  color: ${(props) => (props.income ? "#03ac00" : "#c70000")};
 `;
 
 const Net = styled.div`
@@ -193,7 +206,7 @@ const NetDescription = styled.div`
 const NetValue = styled.div`
   font-family: Raleway;
   font-size: 21px;
-  color: #03ac00;
+  color: ${(props) => (props.income ? "#03ac00" : "#c70000")};
 `;
 
 const Bottom = styled.div`

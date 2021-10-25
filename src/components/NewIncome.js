@@ -49,6 +49,7 @@ export default function NewIncome() {
         <form onSubmit={toAddNewIncome}>
           <IncomeValue
             type="number"
+            step=".01"
             min="1"
             value={incomeValue}
             onChange={(e) => setIncomeValue(e.target.value)}

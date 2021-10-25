@@ -49,6 +49,7 @@ export default function NewExpense() {
         <form onSubmit={toAddNewExpense}>
           <ExpenseValue
             type="number"
+            step=".01"
             min="1"
             value={expenseValue}
             onChange={(e) => setExpenseValue(e.target.value)}
