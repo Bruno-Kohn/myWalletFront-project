@@ -56,7 +56,7 @@ export default function Records() {
           {recordsList.length === 0 ? (
             <h1>You don't have any records yet</h1>
           ) : (
-            recordsList.map((i) => {
+            recordsList.map((i, key) => {
               return (
                 <RecordsDisplay>
                   <Description>
@@ -65,7 +65,7 @@ export default function Records() {
                     </DescriptionDate>
                     <DescriptionInfo>{i.description}</DescriptionInfo>
                   </Description>
-                  <RecordsValue income={Number(i.value) > 0 ? true : false}>
+                  <RecordsValue key={key} income={Number(i.value) > 0 ? true : false}>
                     {i.value.includes(".")
                       ? "$ " + i.value.replace("-", "")
                       : `$ ${i.value.replace("-", "")}.00`}
