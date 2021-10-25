@@ -14,7 +14,6 @@ export default function NewIncome() {
 
   function toAddNewIncome(event) {
     event.preventDefault();
-    console.log("new income added"); //remove later
     setClicked(true);
     const body = {
       incomeValue,

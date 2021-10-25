@@ -14,7 +14,6 @@ export default function NewExpense() {
 
   function toAddNewExpense(event) {
     event.preventDefault();
-    console.log("new expense added"); //remove later
     setClicked(true);
     const body = {
       expenseValue,

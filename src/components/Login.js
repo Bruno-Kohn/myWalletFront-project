@@ -9,7 +9,7 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [clicked, setClicked] = useState(false);
-  const { setUserData } = useContext(UserContext); // {UserData}
+  const { setUserData } = useContext(UserContext); 
 
   function toLogin(event) {
     event.preventDefault();

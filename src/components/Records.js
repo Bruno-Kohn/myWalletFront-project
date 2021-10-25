@@ -10,10 +10,9 @@ import dayjs from "dayjs";
 export default function Records() {
   const { userData, setUserData } = useContext(UserContext);
   const [recordsList, setRecordsList] = useState([]);
-  const tknLogin = userData.token;
   const history = useHistory();
 
-  if (!tknLogin) {
+  if (!localStorage.getItem("loginUser")) {
     history.push("/");
   }
 
@@ -24,17 +23,14 @@ export default function Records() {
           Authorization: `Bearer ${userData.token}`,
         },
       };
-      console.log(userData.token, "meu tokennn");
       axios.get(`http://localhost:4000/`, header);
       const req = axios.get(`http://localhost:4000/records`, header);
       req.then((resp) => {
-        console.log(resp, "opa1");
-        console.log(resp.data, "opa2");
         setRecordsList(resp.data);
       });
     },
     // eslint-disable-next-line
-    []
+    [userData]
   );
 
   function toExitAccount() {
@@ -46,7 +42,6 @@ export default function Records() {
   function sumNet() {
     let sumNet = 0;
     recordsList.forEach((i) => (sumNet = sumNet + Number(i.value)));
-    console.log(sumNet, "wkhdhkwd");
     return sumNet;
   }
 
