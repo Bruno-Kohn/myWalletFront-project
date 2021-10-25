@@ -80,7 +80,7 @@ export default function Records() {
             {recordsList.length === 0 ? "" : <h1>Net</h1>}
           </NetDescription>
           <NetValue income={Number(sumNet()) > 0 ? true : false}>
-            {recordsList.length === 0 ? "" : "$ " + sumNet().toFixed(2)}
+            {recordsList.length === 0 ? "" : "$ " + sumNet().toFixed(2).replace("-", "")}
           </NetValue>
         </Net>
       </BackContainer>
